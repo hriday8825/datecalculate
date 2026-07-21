@@ -210,13 +210,6 @@
             gap: 16px;
         }
 
-        .cgpa-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
         .fraction-row {
             display: flex;
             align-items: center;
@@ -277,20 +270,6 @@
         }
 
         .submit-btn:hover { background: var(--primary-hover); }
-
-        .btn-secondary-custom {
-            background: #64748b;
-            color: white;
-            padding: 8px 14px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-
-        .btn-secondary-custom:hover { background: #475569; }
 
         .result-box {
             margin-top: 20px;
@@ -445,7 +424,7 @@
         }
 
         @media (max-width: 600px) {
-            .grid-2, .cgpa-row { grid-template-columns: 1fr; }
+            .grid-2 { grid-template-columns: 1fr; }
             .nav-links { display: none; }
             .calc-card { padding: 18px; }
         }
@@ -485,7 +464,6 @@
                 <div class="category-name">Math & Utilities</div>
                 <ul class="calc-list">
                     <li><button class="calc-btn active" onclick="showCalc('age-calc', this)">🎂 Custom Age / DOB Calculator</button></li>
-                    <li><button class="calc-btn" onclick="showCalc('cgpa-calc', this)">🎓 CGPA Calculator</button></li>
                     <li><button class="calc-btn" onclick="showCalc('fraction-calc', this)">➕ Fraction Calculator</button></li>
                     <li><button class="calc-btn" onclick="showCalc('percentage-calc', this)">% Percentage Calculator</button></li>
                     <li><button class="calc-btn" onclick="showCalc('rng-calc', this)">🎲 Random Number Generator</button></li>
@@ -557,44 +535,6 @@
                     <div class="result-title">Exact Age</div>
                     <div class="result-val" id="age-val">-</div>
                     <div class="result-details" id="age-details"></div>
-                </div>
-            </div>
-
-            <!-- CGPA CALCULATOR -->
-            <div id="cgpa-calc" class="calc-card">
-                <h2>🎓 CGPA Calculator</h2>
-                <p class="desc">Calculate Cumulative Grade Point Average (CGPA) and convert it to percentage.</p>
-                
-                <div id="cgpa-rows">
-                    <div class="cgpa-row">
-                        <div class="form-group">
-                            <label>Semester / Subject Grade (GPA/Marks)</label>
-                            <input type="number" step="0.01" class="cgpa-grade" placeholder="e.g. 8.5 or 85">
-                        </div>
-                        <div class="form-group">
-                            <label>Credit Hours (Optional)</label>
-                            <input type="number" step="0.5" class="cgpa-credit" placeholder="e.g. 3 or 4" value="1">
-                        </div>
-                    </div>
-                    <div class="cgpa-row">
-                        <div class="form-group">
-                            <label>Semester / Subject Grade (GPA/Marks)</label>
-                            <input type="number" step="0.01" class="cgpa-grade" placeholder="e.g. 8.0 or 80">
-                        </div>
-                        <div class="form-group">
-                            <label>Credit Hours (Optional)</label>
-                            <input type="number" step="0.5" class="cgpa-credit" placeholder="e.g. 3 or 4" value="1">
-                        </div>
-                    </div>
-                </div>
-
-                <button class="btn-secondary-custom" onclick="addCgpaRow()">➕ Add Another Semester/Subject</button>
-                <button class="submit-btn" onclick="calcCGPA()">Calculate CGPA</button>
-
-                <div id="cgpa-result" class="result-box">
-                    <div class="result-title">Overall CGPA</div>
-                    <div class="result-val" id="cgpa-val">0.00</div>
-                    <div class="result-details" id="cgpa-details"></div>
                 </div>
             </div>
 
@@ -1612,57 +1552,6 @@
                 </ul>
             `;
             document.getElementById('age-result').classList.add('show');
-        }
-
-        // CGPA Calculator Logic
-        function addCgpaRow() {
-            const container = document.getElementById('cgpa-rows');
-            const newRow = document.createElement('div');
-            newRow.className = 'cgpa-row';
-            newRow.innerHTML = `
-                <div class="form-group">
-                    <label>Semester / Subject Grade (GPA/Marks)</label>
-                    <input type="number" step="0.01" class="cgpa-grade" placeholder="e.g. 8.0 or 80">
-                </div>
-                <div class="form-group">
-                    <label>Credit Hours (Optional)</label>
-                    <input type="number" step="0.5" class="cgpa-credit" placeholder="e.g. 3 or 4" value="1">
-                </div>
-            `;
-            container.appendChild(newRow);
-        }
-
-        function calcCGPA() {
-            const grades = document.querySelectorAll('.cgpa-grade');
-            const credits = document.querySelectorAll('.cgpa-credit');
-
-            let totalPoints = 0;
-            let totalCredits = 0;
-
-            for (let i = 0; i < grades.length; i++) {
-                let g = parseFloat(grades[i].value);
-                let c = parseFloat(credits[i].value) || 1;
-
-                if (!isNaN(g)) {
-                    totalPoints += g * c;
-                    totalCredits += c;
-                }
-            }
-
-            if (totalCredits === 0) {
-                alert("Please enter valid grades.");
-                return;
-            }
-
-            let cgpa = totalPoints / totalCredits;
-            let percentage = cgpa <= 10 ? (cgpa * 9.5).toFixed(2) + "%" : "N/A";
-
-            document.getElementById('cgpa-val').innerText = cgpa.toFixed(2);
-            document.getElementById('cgpa-details').innerHTML = `
-                Equivalent Percentage (Standard 9.5 Multiple): <b>${percentage}</b><br>
-                Total Credits Counted: <b>${totalCredits}</b>
-            `;
-            document.getElementById('cgpa-result').classList.add('show');
         }
 
         // Math Functions
