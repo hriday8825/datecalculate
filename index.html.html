@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Calculator - Universal All-in-One Multi Country Calculator</title>
+    <meta name="description" content="Free online financial, health, and math calculators. Fast, accurate, mobile-friendly, and auto-adjusted for US and India.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #1e40af;
+            --primary-hover: #1d4ed8;
+            --secondary: #0f172a;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo span { color: var(--secondary); }
+
+        .country-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .country-selector select {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            outline: none;
+            cursor: pointer;
+            font-weight: 600;
+            background: #ffffff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--primary); }
+
+        .main-wrapper {
+            max-width: 1200px;
+            margin: 24px auto;
+            padding: 0 16px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 280px 1fr 300px;
+            gap: 24px;
+            flex: 1;
+        }
+
+        .sidebar {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            height: fit-content;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .category-group { margin-bottom: 20px; }
+
+        .category-name {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .calc-list { list-style: none; }
+
+        .calc-btn {
+            width: 100%;
+            text-align: left;
+            padding: 8px 10px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .calc-btn:hover {
+            background-color: #f1f5f9;
+            color: var(--primary);
+        }
+
+        .calc-btn.active {
+            background-color: #eff6ff;
+            color: var(--primary);
+            font-weight: 600;
+            border-left: 3px solid var(--primary);
+        }
+
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .calc-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: var(--shadow);
+            display: none;
+        }
+
+        .calc-card.active { display: block; }
+
+        .calc-card h2 {
+            font-size: 1.4rem;
+            color: var(--secondary);
+            margin-bottom: 6px;
+        }
+
+        .calc-card p.desc {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .cgpa-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .fraction-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .fraction-box {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: 100px;
+        }
+
+        .form-group { margin-bottom: 16px; }
+
+        .form-group label {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+            background: #fafafa;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--primary);
+            background: #ffffff;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover { background: var(--primary-hover); }
+
+        .btn-secondary-custom {
+            background: #64748b;
+            color: white;
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .btn-secondary-custom:hover { background: #475569; }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 18px;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            display: none;
+        }
+
+        .result-box.show { display: block; }
+
+        .result-title {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .result-val {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .result-details {
+            margin-top: 10px;
+            font-size: 0.88rem;
+            color: var(--text-dark);
+            border-top: 1px solid var(--border-color);
+            padding-top: 10px;
+            line-height: 1.6;
+        }
+
+        .ad-banner {
+            background: #f1f5f9;
+            border: 1px dashed #cbd5e1;
+            border-radius: 8px;
+            text-align: center;
+            padding: 15px;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin: 15px 0;
+        }
+
+        .blog-section-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .blog-section-card h3 {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .seo-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 20px;
+            font-size: 0.92rem;
+            color: #475569;
+            line-height: 1.6;
+        }
+
+        .right-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-widget {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar-widget h3 {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        footer {
+            background: var(--secondary);
+            color: white;
+            margin-top: auto;
+            padding: 25px 20px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 0.88rem;
+            color: #94a3b8;
+        }
+
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+
+        /* Admin Modal */
+        .admin-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .admin-box {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        .close-admin {
+            position: absolute;
+            top: 10px; right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #64748b;
+        }
+
+        @media (max-width: 992px) {
+            .main-wrapper { grid-template-columns: 1fr; }
+            .right-sidebar { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .grid-2, .cgpa-row { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+            .calc-card { padding: 18px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="#" class="logo">🤖🧮 Free <span>Calculator</span></a>
+            
+            <!-- Region Auto/Manual Selector -->
+            <div class="country-selector">
+                <label for="countrySelect">Region:</label>
+                <select id="countrySelect" onchange="manualCountryChange(this.value)">
+                    <option value="US">🇺🇸 USA ($)</option>
+                    <option value="IN">🇮🇳 India (₹)</option>
+                </select>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#privacy">Privacy Policy</a></li>
+                <li><a href="#contact">Contact Us</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="main-wrapper">
+
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-title">Categories</div>
+
+            <!-- Math & Utilities -->
+            <div class="category-group">
+                <div class="category-name">Math & Utilities</div>
+                <ul class="calc-list">
+                    <li><button class="calc-btn active" onclick="showCalc('age-calc', this)">🎂 Custom Age / DOB Calculator</button></li>
+                    <li><button class="calc-btn" onclick="showCalc('cgpa-calc', this)">🎓 CGPA Calculator</button></li>
+                    <li><button class="calc-btn" onclick="showCalc('fraction-calc', this)">➕ Fraction Calculator</button></li>
+                    <li><button class="calc-btn" onclick="showCalc('percentage-calc', this)">% Percentage Calculator</button></li>
+                    <li><button class="calc-btn" onclick="showCalc('rng-calc', this)">🎲 Random Number Generator</button></li>
+                    <li><button class="calc-btn" onclick="showCalc('triangle-calc', this)">📐 Triangle Calculator</button></li>
+                </ul>
+            </div>
+
+            <!-- Fitness & Health -->
+            <div class="category-group">
+                <div class="category-name">Fitness & Health</div>
+                <ul class="calc-list">
+                    <li><button class="calc-btn" onclick="showCalc('bmi-calc', this)">⚖️ BMI Calculator</button></li>
+                    <li><button class="calc-btn" onclick="showCalc('pregnancy-calc', this)">🤰 Pregnancy Calculator</button></li>
+                    <li><button class="calc-btn" onclick="showCalc('conception-calc', this)">🗓️ Pregnancy Conception Calculator</button></li>
+                    <li><button class="calc-btn" onclick="showCalc('duedate-calc', this)">👶 Due Date Calculator</button></li>
+                    <li><button class="calc-btn" onclick="showCalc('weight-calc', this)">🏃 Weight & IBW Calculator</button></li>
+                </ul>
+            </div>
+
+            <!-- Financial & Investment -->
+            <div class="category-group">
+                <div class="category-name">Financial & Investment</div>
+                <ul class="calc-list">
+                    <li><button class="calc-btn" onclick="showCalc('mortgage-calc', this)">🏡 Mortgage Calculator</button></li>
+                    <li><button class="calc-btn" onclick="showCalc('loan-calc', this)">💰 Loan Calculator</button></li>
+                    <li><button class="calc-btn" onclick="showCalc('auto-loan-calc', this)">🚗 Auto Loan Calculator</button></li>
+                    <li><button class="calc-btn" onclick="showCalc('interest-calc', this)">📊 Interest Calculator</button></li>
+                    <li><button class="calc-btn" onclick="showCalc('payment-calc', this)">💳 Payment Calculator</button></li>
+                    <li><button class="calc-btn" onclick="showCalc('retirement-calc', this)">🏖️ Retirement Calculator</button></li>
+                    <li><button class="calc-btn" onclick="showCalc('amortization-calc', this)">📜 Amortization Calculator</button></li>
+                    <li><button class="calc-btn" onclick="showCalc('investment-calc', this)">📈 Investment Calculator</button></li>
+                    <li><button class="calc-btn" onclick="showCalc('inflation-calc', this)">💸 Inflation Calculator</button></li>
+                    <li><button class="calc-btn" onclick="showCalc('finance-calc', this)">💵 Finance Calculator</button></li>
+                    <li><button class="calc-btn" onclick="showCalc('income-tax-calc', this)">🧾 Income Tax Calculator</button></li>
+                    <li><button class="calc-btn" onclick="showCalc('compound-interest-calc', this)">🔁 Compound Interest</button></li>
+                    <li><button class="calc-btn" onclick="showCalc('salary-calc', this)">💼 Salary Calculator</button></li>
+                    <li><button class="calc-btn" onclick="showCalc('interest-rate-calc', this)">📉 Interest Rate Calculator</button></li>
+                    <li><button class="calc-btn" onclick="showCalc('sales-tax-calc', this)">🛍️ Sales Tax Calculator</button></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content-area">
+
+            <div class="ad-banner">
+                <div>[ Google AdSense Responsive Header Unit ]</div>
+            </div>
+
+            <!-- CUSTOM AGE & DOB CALCULATOR (Default Active) -->
+            <div id="age-calc" class="calc-card active">
+                <h2>🎂 Custom Age & DOB Calculator</h2>
+                <p class="desc">Calculate your exact age down to years, months, days, hours, and find out your next birthday countdown.</p>
+                
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="age-dob">Date of Birth (DOB) (<span class="date-fmt-text">MM/DD/YYYY</span>)</label>
+                        <input type="text" id="age-dob" placeholder="MM/DD/YYYY">
+                    </div>
+                    <div class="form-group">
+                        <label for="age-target">Calculate Age As Of (<span class="date-fmt-text">MM/DD/YYYY</span>)</label>
+                        <input type="text" id="age-target" placeholder="MM/DD/YYYY">
+                    </div>
+                </div>
+
+                <button class="submit-btn" onclick="calcAge()">Calculate Age</button>
+
+                <div id="age-result" class="result-box">
+                    <div class="result-title">Exact Age</div>
+                    <div class="result-val" id="age-val">-</div>
+                    <div class="result-details" id="age-details"></div>
+                </div>
+            </div>
+
+            <!-- CGPA CALCULATOR -->
+            <div id="cgpa-calc" class="calc-card">
+                <h2>🎓 CGPA Calculator</h2>
+                <p class="desc">Calculate Cumulative Grade Point Average (CGPA) and convert it to percentage.</p>
+                
+                <div id="cgpa-rows">
+                    <div class="cgpa-row">
+                        <div class="form-group">
+                            <label>Semester / Subject Grade (GPA/Marks)</label>
+                            <input type="number" step="0.01" class="cgpa-grade" placeholder="e.g. 8.5 or 85">
+                        </div>
+                        <div class="form-group">
+                            <label>Credit Hours (Optional)</label>
+                            <input type="number" step="0.5" class="cgpa-credit" placeholder="e.g. 3 or 4" value="1">
+                        </div>
+                    </div>
+                    <div class="cgpa-row">
+                        <div class="form-group">
+                            <label>Semester / Subject Grade (GPA/Marks)</label>
+                            <input type="number" step="0.01" class="cgpa-grade" placeholder="e.g. 8.0 or 80">
+                        </div>
+                        <div class="form-group">
+                            <label>Credit Hours (Optional)</label>
+                            <input type="number" step="0.5" class="cgpa-credit" placeholder="e.g. 3 or 4" value="1">
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-secondary-custom" onclick="addCgpaRow()">➕ Add Another Semester/Subject</button>
+                <button class="submit-btn" onclick="calcCGPA()">Calculate CGPA</button>
+
+                <div id="cgpa-result" class="result-box">
+                    <div class="result-title">Overall CGPA</div>
+                    <div class="result-val" id="cgpa-val">0.00</div>
+                    <div class="result-details" id="cgpa-details"></div>
+                </div>
+            </div>
+
+            <!-- FRACTION CALCULATOR -->
+            <div id="fraction-calc" class="calc-card">
+                <h2>Fraction Calculator</h2>
+                <p class="desc">Perform addition, subtraction, multiplication, and division on fractions.</p>
+                <div class="fraction-row">
+                    <div class="fraction-box">
+                        <input type="number" id="frac-num1" placeholder="Num 1" value="1">
+                        <input type="number" id="frac-den1" placeholder="Den 1" value="2">
+                    </div>
+                    <div style="width: 80px;">
+                        <select id="frac-op">
+                            <option value="+">+</option>
+                            <option value="-">-</option>
+                            <option value="*">&times;</option>
+                            <option value="/">÷</option>
+                        </select>
+                    </div>
+                    <div class="fraction-box">
+                        <input type="number" id="frac-num2" placeholder="Num 2" value="1">
+                        <input type="number" id="frac-den2" placeholder="Den 2" value="4">
+                    </div>
+                </div>
+                <button class="submit-btn" onclick="calcFraction()">Calculate Fraction</button>
+                <div id="frac-result" class="result-box">
+                    <div class="result-title">Resulting Fraction</div>
+                    <div class="result-val" id="frac-val">-</div>
+                    <div class="result-details" id="frac-details"></div>
+                </div>
+            </div>
+
+            <!-- PERCENTAGE CALCULATOR -->
+            <div id="percentage-calc" class="calc-card">
+                <h2>Percentage Calculator</h2>
+                <p class="desc">Calculate percentage values and percentage changes.</p>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Percentage (%)</label>
+                        <input type="number" id="pct-rate" value="20">
+                    </div>
+                    <div class="form-group">
+                        <label>Total Value</label>
+                        <input type="number" id="pct-total" value="500">
+                    </div>
+                </div>
+                <button class="submit-btn" onclick="calcPercentage()">Calculate Percentage</button>
+                <div id="pct-result" class="result-box">
+                    <div class="result-title">Result</div>
+                    <div class="result-val" id="pct-val">0</div>
+                </div>
+            </div>
+
+            <!-- RANDOM NUMBER GENERATOR -->
+            <div id="rng-calc" class="calc-card">
+                <h2>Random Number Generator</h2>
+                <p class="desc">Generate a random integer within a specified minimum and maximum range.</p>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Minimum Value</label>
+                        <input type="number" id="rng-min" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Maximum Value</label>
+                        <input type="number" id="rng-max" value="100">
+                    </div>
+                </div>
+                <button class="submit-btn" onclick="calcRNG()">Generate Number</button>
+                <div id="rng-result" class="result-box">
+                    <div class="result-title">Random Number</div>
+                    <div class="result-val" id="rng-val">-</div>
+                </div>
+            </div>
+
+            <!-- TRIANGLE CALCULATOR -->
+            <div id="triangle-calc" class="calc-card">
+                <h2>Triangle Calculator</h2>
+                <p class="desc">Calculate the area and perimeter of a triangle using side lengths (Heron's Formula).</p>
+                <div class="grid-2">
+                    <div class="form-group"><label>Side A</label><input type="number" id="tri-a" value="3"></div>
+                    <div class="form-group"><label>Side B</label><input type="number" id="tri-b" value="4"></div>
+                </div>
+                <div class="form-group"><label>Side C</label><input type="number" id="tri-c" value="5"></div>
+                <button class="submit-btn" onclick="calcTriangle()">Calculate Triangle</button>
+                <div id="tri-result" class="result-box">
+                    <div class="result-title">Triangle Dimensions</div>
+                    <div class="result-val" id="tri-val">0</div>
+                    <div class="result-details" id="tri-details"></div>
+                </div>
+            </div>
+
+            <!-- FITNESS & HEALTH CALCULATORS -->
+            <div id="bmi-calc" class="calc-card">
+                <h2>Body Mass Index (BMI) Calculator</h2>
+                <p class="desc">Calculate your Body Mass Index based on height and weight.</p>
+                <div class="grid-2">
+                    <div class="form-group"><label id="bmi-height-label">Height (Inches):</label><input type="number" id="bmi-height" placeholder="e.g. 67"></div>
+                    <div class="form-group"><label id="bmi-weight-label">Weight (lbs):</label><input type="number" id="bmi-weight" placeholder="e.g. 150"></div>
+                </div>
+                <button class="submit-btn" onclick="calcBMI()">Calculate BMI</button>
+                <div id="bmi-result" class="result-box"><div class="result-title">BMI Index</div><div class="result-val" id="bmi-val">0</div><div class="result-details" id="bmi-details"></div></div>
+            </div>
+
+            <!-- PREGNANCY CALCULATOR -->
+            <div id="pregnancy-calc" class="calc-card">
+                <h2>Pregnancy Calculator</h2>
+                <p class="desc">Estimate current gestational age based on Last Menstrual Period (LMP).</p>
+                <div class="form-group">
+                    <label id="preg-label">First Day of Last Menstrual Period (LMP) (<span class="date-fmt-text">MM/DD/YYYY</span>)</label>
+                    <input type="text" id="preg-lmp" placeholder="MM/DD/YYYY">
+                </div>
+                <button class="submit-btn" onclick="calcPregnancy()">Calculate Gestational Age</button>
+                <div id="preg-result" class="result-box">
+                    <div class="result-title">Current Gestational Progress</div>
+                    <div class="result-val" id="preg-val">-</div>
+                    <div class="result-details" id="preg-details"></div>
+                </div>
+            </div>
+
+            <!-- PREGNANCY CONCEPTION CALCULATOR -->
+            <div id="conception-calc" class="calc-card">
+                <h2>Pregnancy Conception Calculator</h2>
+                <p class="desc">Estimate probable conception date range based on LMP.</p>
+                <div class="form-group">
+                    <label>First Day of Last Period (LMP) (<span class="date-fmt-text">MM/DD/YYYY</span>)</label>
+                    <input type="text" id="conc-lmp" placeholder="MM/DD/YYYY">
+                </div>
+                <button class="submit-btn" onclick="calcConception()">Calculate Conception Date</button>
+                <div id="conc-result" class="result-box">
+                    <div class="result-title">Estimated Conception Date</div>
+                    <div class="result-val" id="conc-val">-</div>
+                    <div class="result-details" id="conc-details"></div>
+                </div>
+            </div>
+
+            <!-- DUE DATE CALCULATOR -->
+            <div id="duedate-calc" class="calc-card">
+                <h2>Due Date Calculator</h2>
+                <p class="desc">Calculate estimated delivery due date using Naegele's rule (280 days).</p>
+                <div class="form-group">
+                    <label>First Day of Last Period (LMP) (<span class="date-fmt-text">MM/DD/YYYY</span>)</label>
+                    <input type="text" id="dd-lmp" placeholder="MM/DD/YYYY">
+                </div>
+                <button class="submit-btn" onclick="calcDueDate()">Calculate Due Date</button>
+                <div id="dd-result" class="result-box">
+                    <div class="result-title">Estimated Due Date</div>
+                    <div class="result-val" id="dd-val">-</div>
+                    <div class="result-details" id="dd-details"></div>
+                </div>
+            </div>
+
+            <!-- WEIGHT CALCULATOR -->
+            <div id="weight-calc" class="calc-card">
+                <h2>Weight & Ideal Body Weight (IBW) Calculator</h2>
+                <p class="desc">Calculate Ideal Body Weight (IBW) and healthy weight range for height.</p>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select id="wt-gender">
+                            <option value="female">Female</option>
+                            <option value="male">Male</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label id="wt-height-label">Height (cm)</label>
+                        <input type="number" id="wt-height" value="165">
+                    </div>
+                </div>
+                <button class="submit-btn" onclick="calcWeight()">Calculate Ideal Weight</button>
+                <div id="wt-result" class="result-box">
+                    <div class="result-title">Ideal Body Weight</div>
+                    <div class="result-val" id="wt-val">0</div>
+                    <div class="result-details" id="wt-details"></div>
+                </div>
+            </div>
+
+            <!-- MORTGAGE CALCULATOR -->
+            <div id="mortgage-calc" class="calc-card">
+                <h2>Mortgage Calculator</h2>
+                <p class="desc">Calculate home loan payments including property tax and home insurance estimates.</p>
+                <div class="form-group"><label>Home Price (<span class="curr-symbol">$</span>)</label><input type="number" id="mg-price" value="250000"></div>
+                <div class="grid-2">
+                    <div class="form-group"><label>Down Payment (<span class="curr-symbol">$</span>)</label><input type="number" id="mg-down" value="50000"></div>
+                    <div class="form-group"><label>Interest Rate (%)</label><input type="number" step="0.1" id="mg-rate" value="6.5"></div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group"><label>Loan Term (Years)</label><input type="number" id="mg-years" value="30"></div>
+                    <div class="form-group"><label>Annual Property Tax (<span class="curr-symbol">$</span>)</label><input type="number" id="mg-tax" value="2400"></div>
+                </div>
+                <button class="submit-btn" onclick="calcMortgage()">Calculate Mortgage</button>
+                <div id="mg-result" class="result-box">
+                    <div class="result-title">Total Monthly Payment</div>
+                    <div class="result-val" id="mg-val"><span class="curr-symbol">$</span>0</div>
+                    <div class="result-details" id="mg-details"></div>
+                </div>
+            </div>
+
+            <!-- LOAN CALCULATOR -->
+            <div id="loan-calc" class="calc-card">
+                <h2>Loan Calculator</h2>
+                <p class="desc">Calculate monthly installments and total loan cost.</p>
+                <div class="form-group"><label>Loan Amount (<span class="curr-symbol">$</span>)</label><input type="number" id="ln-amount" value="20000"></div>
+                <div class="grid-2">
+                    <div class="form-group"><label>Interest Rate (% P.A.)</label><input type="number" step="0.1" id="ln-rate" value="7.5"></div>
+                    <div class="form-group"><label>Tenure (Years)</label><input type="number" id="ln-years" value="5"></div>
+                </div>
+                <button class="submit-btn" onclick="calcLoan()">Calculate Loan EMI</button>
+                <div id="ln-result" class="result-box"><div class="result-title">Monthly EMI</div><div class="result-val" id="ln-val"><span class="curr-symbol">$</span>0</div><div class="result-details" id="ln-details"></div></div>
+            </div>
+
+            <!-- AUTO LOAN -->
+            <div id="auto-loan-calc" class="calc-card">
+                <h2>Auto Loan Calculator</h2>
+                <p class="desc">Estimate financing costs for new or used vehicles.</p>
+                <div class="form-group"><label>Vehicle Price (<span class="curr-symbol">$</span>)</label><input type="number" id="al-price" value="30000"></div>
+                <div class="grid-2">
+                    <div class="form-group"><label>Down Payment (<span class="curr-symbol">$</span>)</label><input type="number" id="al-down" value="5000"></div>
+                    <div class="form-group"><label>Interest Rate (%)</label><input type="number" step="0.1" id="al-rate" value="5.5"></div>
+                </div>
+                <div class="form-group"><label>Loan Term (Years)</label><input type="number" id="al-years" value="5"></div>
+                <button class="submit-btn" onclick="calcAutoLoan()">Calculate Auto EMI</button>
+                <div id="al-result" class="result-box"><div class="result-title">Monthly Vehicle EMI</div><div class="result-val" id="al-val"><span class="curr-symbol">$</span>0</div><div class="result-details" id="al-details"></div></div>
+            </div>
+
+            <!-- INTEREST -->
+            <div id="interest-calc" class="calc-card">
+                <h2>Interest Calculator</h2>
+                <p class="desc">Simple interest calculation on fixed principal amount.</p>
+                <div class="form-group"><label>Principal Amount (<span class="curr-symbol">$</span>)</label><input type="number" id="it-p" value="10000"></div>
+                <div class="grid-2">
+                    <div class="form-group"><label>Annual Interest Rate (%)</label><input type="number" step="0.1" id="it-r" value="5.0"></div>
+                    <div class="form-group"><label>Time Period (Years)</label><input type="number" id="it-t" value="3"></div>
+                </div>
+                <button class="submit-btn" onclick="calcSimpleInterest()">Calculate Interest</button>
+                <div id="it-result" class="result-box"><div class="result-title">Simple Interest</div><div class="result-val" id="it-val"><span class="curr-symbol">$</span>0</div><div class="result-details" id="it-details"></div></div>
+            </div>
+
+            <!-- PAYMENT -->
+            <div id="payment-calc" class="calc-card">
+                <h2>Payment Calculator</h2>
+                <p class="desc">Find fixed loan repayments over customized months.</p>
+                <div class="form-group"><label>Amount Borrowed (<span class="curr-symbol">$</span>)</label><input type="number" id="pm-amount" value="15000"></div>
+                <div class="grid-2">
+                    <div class="form-group"><label>Interest Rate (%)</label><input type="number" step="0.1" id="pm-rate" value="8"></div>
+                    <div class="form-group"><label>Total Months</label><input type="number" id="pm-months" value="36"></div>
+                </div>
+                <button class="submit-btn" onclick="calcPayment()">Calculate Monthly Payment</button>
+                <div id="pm-result" class="result-box"><div class="result-title">Monthly Payment</div><div class="result-val" id="pm-val"><span class="curr-symbol">$</span>0</div></div>
+            </div>
+
+            <!-- RETIREMENT -->
+            <div id="retirement-calc" class="calc-card">
+                <h2>Retirement Calculator</h2>
+                <p class="desc">Plan your retirement savings corpus based on monthly contribution.</p>
+                <div class="grid-2">
+                    <div class="form-group"><label>Current Age</label><input type="number" id="rt-age" value="25"></div>
+                    <div class="form-group"><label>Retirement Age</label><input type="number" id="rt-retire" value="65"></div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group"><label>Monthly Savings (<span class="curr-symbol">$</span>)</label><input type="number" id="rt-savings" value="500"></div>
+                    <div class="form-group"><label>Expected Annual Return (%)</label><input type="number" step="0.1" id="rt-rate" value="8"></div>
+                </div>
+                <button class="submit-btn" onclick="calcRetirement()">Calculate Retirement Corpus</button>
+                <div id="rt-result" class="result-box"><div class="result-title">Estimated Corpus at Retirement</div><div class="result-val" id="rt-val"><span class="curr-symbol">$</span>0</div><div class="result-details" id="rt-details"></div></div>
+            </div>
+
+            <!-- AMORTIZATION -->
+            <div id="amortization-calc" class="calc-card">
+                <h2>Amortization Calculator</h2>
+                <p class="desc">See initial breakdown of loan interest vs principal payoff.</p>
+                <div class="form-group"><label>Loan Principal (<span class="curr-symbol">$</span>)</label><input type="number" id="am-amount" value="100000"></div>
+                <div class="grid-2">
+                    <div class="form-group"><label>Interest Rate (%)</label><input type="number" step="0.1" id="am-rate" value="6.5"></div>
+                    <div class="form-group"><label>Tenure (Years)</label><input type="number" id="am-years" value="15"></div>
+                </div>
+                <button class="submit-btn" onclick="calcAmortization()">Calculate First Month Amortization</button>
+                <div id="am-result" class="result-box"><div class="result-title">Monthly Breakdown</div><div class="result-val" id="am-val"><span class="curr-symbol">$</span>0</div><div class="result-details" id="am-details"></div></div>
+            </div>
+
+            <!-- INVESTMENT -->
+            <div id="investment-calc" class="calc-card">
+                <h2>Investment Calculator</h2>
+                <p class="desc">Estimate returns on fixed one-time investments.</p>
+                <div class="form-group"><label>Initial Investment (<span class="curr-symbol">$</span>)</label><input type="number" id="iv-principal" value="10000"></div>
+                <div class="grid-2">
+                    <div class="form-group"><label>Expected Return Rate (%)</label><input type="number" step="0.1" id="iv-rate" value="9"></div>
+                    <div class="form-group"><label>Time Period (Years)</label><input type="number" id="iv-years" value="10"></div>
+                </div>
+                <button class="submit-btn" onclick="calcInvestment()">Calculate Maturity Value</button>
+                <div id="iv-result" class="result-box"><div class="result-title">Maturity Value</div><div class="result-val" id="iv-val"><span class="curr-symbol">$</span>0</div><div class="result-details" id="iv-details"></div></div>
+            </div>
+
+            <!-- INFLATION -->
+            <div id="inflation-calc" class="calc-card">
+                <h2>Inflation Calculator</h2>
+                <p class="desc">Calculate future price changes and purchasing power reduction.</p>
+                <div class="form-group"><label>Current Amount / Price (<span class="curr-symbol">$</span>)</label><input type="number" id="inf-amount" value="1000"></div>
+                <div class="grid-2">
+                    <div class="form-group"><label>Inflation Rate (%)</label><input type="number" step="0.1" id="inf-rate" value="3.5"></div>
+                    <div class="form-group"><label>Years in Future</label><input type="number" id="inf-years" value="10"></div>
+                </div>
+                <button class="submit-btn" onclick="calcInflation()">Calculate Future Cost</button>
+                <div id="inf-result" class="result-box"><div class="result-title">Equivalent Cost in Future</div><div class="result-val" id="inf-val"><span class="curr-symbol">$</span>0</div><div class="result-details" id="inf-details"></div></div>
+            </div>
+
+            <!-- FINANCE -->
+            <div id="finance-calc" class="calc-card">
+                <h2>Finance Calculator</h2>
+                <p class="desc">Calculate future value of recurring deposits/investments.</p>
+                <div class="form-group"><label>Annual Deposit Amount (<span class="curr-symbol">$</span>)</label><input type="number" id="fn-deposit" value="5000"></div>
+                <div class="grid-2">
+                    <div class="form-group"><label>Annual Interest Rate (%)</label><input type="number" step="0.1" id="fn-rate" value="7"></div>
+                    <div class="form-group"><label>Duration (Years)</label><input type="number" id="fn-years" value="10"></div>
+                </div>
+                <button class="submit-btn" onclick="calcFinance()">Calculate Future Value</button>
+                <div id="fn-result" class="result-box"><div class="result-title">Total Accumulated Value</div><div class="result-val" id="fn-val"><span class="curr-symbol">$</span>0</div></div>
+            </div>
+
+            <!-- INCOME TAX -->
+            <div id="income-tax-calc" class="calc-card">
+                <h2>Income Tax Estimator</h2>
+                <p class="desc">Estimate annual income tax liability dynamically tailored to US/India tax slabs.</p>
+                <div class="form-group"><label>Annual Taxable Income (<span class="curr-symbol">$</span>)</label><input type="number" id="tax-income" value="60000"></div>
+                <button class="submit-btn" onclick="calcIncomeTax()">Calculate Estimated Tax</button>
+                <div id="tax-result" class="result-box"><div class="result-title">Estimated Tax Payable</div><div class="result-val" id="tax-val"><span class="curr-symbol">$</span>0</div><div class="result-details" id="tax-details"></div></div>
+            </div>
+
+            <!-- COMPOUND INTEREST -->
+            <div id="compound-interest-calc" class="calc-card">
+                <h2>Compound Interest Calculator</h2>
+                <p class="desc">Calculate compound interest returns over time.</p>
+                <div class="form-group"><label>Principal Amount (<span class="curr-symbol">$</span>)</label><input type="number" id="ci-p" value="5000"></div>
+                <div class="grid-2">
+                    <div class="form-group"><label>Annual Rate (%)</label><input type="number" step="0.1" id="ci-r" value="8"></div>
+                    <div class="form-group"><label>Tenure (Years)</label><input type="number" id="ci-t" value="5"></div>
+                </div>
+                <button class="submit-btn" onclick="calcCompound()">Calculate Compound Returns</button>
+                <div id="ci-result" class="result-box"><div class="result-title">Final Amount</div><div class="result-val" id="ci-val"><span class="curr-symbol">$</span>0</div><div class="result-details" id="ci-details"></div></div>
+            </div>
+
+            <!-- SALARY -->
+            <div id="salary-calc" class="calc-card">
+                <h2>Salary Calculator</h2>
+                <p class="desc">Convert monthly or hourly pay into annual gross figures.</p>
+                <div class="grid-2">
+                    <div class="form-group"><label>Pay Amount (<span class="curr-symbol">$</span>)</label><input type="number" id="sal-amount" value="3500"></div>
+                    <div class="form-group"><label>Pay Frequency</label><select id="sal-type"><option value="monthly">Monthly</option><option value="hourly">Hourly (40 hrs/wk)</option></select></div>
+                </div>
+                <button class="submit-btn" onclick="calcSalary()">Calculate Annualized Pay</button>
+                <div id="sal-result" class="result-box"><div class="result-title">Annual Gross Salary</div><div class="result-val" id="sal-val"><span class="curr-symbol">$</span>0</div></div>
+            </div>
+
+            <!-- INTEREST RATE -->
+            <div id="interest-rate-calc" class="calc-card">
+                <h2>Interest Rate Calculator</h2>
+                <p class="desc">Find simple interest rate charged on a given loan transaction.</p>
+                <div class="form-group"><label>Principal Borrowed (<span class="curr-symbol">$</span>)</label><input type="number" id="ir-p" value="10000"></div>
+                <div class="grid-2">
+                    <div class="form-group"><label>Total Interest Charged (<span class="curr-symbol">$</span>)</label><input type="number" id="ir-i" value="1500"></div>
+                    <div class="form-group"><label>Duration (Years)</label><input type="number" id="ir-t" value="2"></div>
+                </div>
+                <button class="submit-btn" onclick="calcRate()">Find Annual Rate</button>
+                <div id="ir-result" class="result-box"><div class="result-title">Annual Interest Rate</div><div class="result-val" id="ir-val">0%</div></div>
+            </div>
+
+            <!-- SALES TAX -->
+            <div id="sales-tax-calc" class="calc-card">
+                <h2>Sales Tax Calculator</h2>
+                <p class="desc">Add tax percentages to goods and service purchases.</p>
+                <div class="grid-2">
+                    <div class="form-group"><label>Net Cost Before Tax (<span class="curr-symbol">$</span>)</label><input type="number" id="st-amount" value="150"></div>
+                    <div class="form-group"><label>Sales Tax Rate (%)</label><input type="number" step="0.1" id="st-rate" value="7.5"></div>
+                </div>
+                <button class="submit-btn" onclick="calcSalesTax()">Calculate Sales Tax</button>
+                <div id="st-result" class="result-box"><div class="result-title">Total Final Price</div><div class="result-val" id="st-val"><span class="curr-symbol">$</span>0</div><div class="result-details" id="st-details"></div></div>
+            </div>
+
+            <!-- Published Main Blog Container -->
+            <div id="blogContainer" class="blog-section-card">
+                <h3>Latest Articles & Updates</h3>
+            </div>
+
+            <!-- SEO Content Section -->
+            <article class="seo-content" id="about">
+                <h3>About Free Calculator - Universal Multi-Tool Portal</h3>
+                <p>Free Calculator provides fast, accurate, and multi-country financial, health, and math utilities designed for global usage across USA and India.</p>
+            </article>
+
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="right-sidebar">
+            <div class="ad-banner" style="min-height: 250px;">[ Google AdSense Sidebar Display ]</div>
+
+            <!-- Custom Password Generator Widget -->
+            <div class="sidebar-widget">
+                <h3>🔑 Custom Password Generator</h3>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">Generate secure passwords using your own details.</p>
+                
+                <div class="form-group" style="margin-bottom: 10px;">
+                    <label style="font-size: 0.8rem;">Base Word / Name</label>
+                    <input type="text" id="cust-word" placeholder="e.g. Admin, User" style="padding: 8px; font-size: 0.85rem;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 10px;">
+                    <label style="font-size: 0.8rem;">Favorite Number / Year</label>
+                    <input type="number" id="cust-num" placeholder="e.g. 2026, 786" style="padding: 8px; font-size: 0.85rem;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 10px;">
+                    <label style="font-size: 0.8rem;">Special Symbols</label>
+                    <input type="text" id="cust-sym" value="@#$" style="padding: 8px; font-size: 0.85rem;">
+                </div>
+
+                <div style="font-size:0.8rem; margin-bottom:12px; display:flex; align-items:center; gap:6px;">
+                    <input type="checkbox" id="shuffle-check" checked>
+                    <label for="shuffle-check">Mix & Shuffle details</label>
+                </div>
+
+                <button class="submit-btn" onclick="generateCustomPassword()" style="padding: 8px; font-size: 0.85rem;">Generate Password</button>
+
+                <div id="cust-pass-result" class="result-box" style="padding: 10px; margin-top: 10px;">
+                    <div class="result-title" style="font-size:0.75rem;">Generated Password</div>
+                    <div class="result-val" id="cust-pass-val" style="font-size: 0.95rem; word-break: break-all; font-family: monospace;">-</div>
+                </div>
+            </div>
+
+            <!-- Published Sidebar Articles Container -->
+            <div id="sidebarBlogContainer" class="sidebar-widget">
+                <h3>📢 Featured Updates</h3>
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- SECRET ADMIN POPUP -->
+    <div id="adminModal" class="admin-modal">
+        <div class="admin-box">
+            <span class="close-admin" onclick="closeAdmin()">&times;</span>
+            <h3 style="margin-bottom: 15px; color: var(--primary);">🔐 Admin Article Publisher Panel</h3>
+            
+            <div class="form-group">
+                <label>Publish Location:</label>
+                <select id="adminBlogLocation">
+                    <option value="main">Latest Articles & Updates (Main Content Area)</option>
+                    <option value="sidebar">Featured Updates (Right Sidebar)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Article Title:</label>
+                <input type="text" id="adminBlogTitle" placeholder="Enter title...">
+            </div>
+
+            <div class="form-group">
+                <label>Article Content:</label>
+                <textarea id="adminBlogContent" placeholder="Enter content..."></textarea>
+            </div>
+
+            <button class="submit-btn" onclick="publishAdminBlog()">Publish Article</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div>&copy; 2026 Free Calculator. All Rights Reserved.</div>
+            <div class="footer-links">
+                <a href="#about">About Us</a>
+                <a href="#privacy">Privacy Policy</a>
+                <a href="#terms">Terms</a>
+                <a href="javascript:void(0)" onclick="openAdmin()" style="opacity:0.3; font-size:0.75rem;">Admin Login</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const ADMIN_PASSWORD = "admin123";
+
+        // Global Dynamic Country Config
+        let config = {
+            country: 'US',
+            currency: '$',
+            locale: 'en-US',
+            dateFormat: 'MM/DD/YYYY',
+            unit: 'imperial'
+        };
+
+        // Auto Detect Location on Page Load
+        window.addEventListener('DOMContentLoaded', () => {
+            detectUserLocation();
+            loadSavedBlogs();
+        });
+
+        function detectUserLocation() {
+            const userLocale = navigator.language || navigator.userLanguage;
+            const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+            if (userLocale.includes('IN') || timeZone.includes('Kolkata') || timeZone.includes('Calcutta')) {
+                setConfig('IN');
+                document.getElementById('countrySelect').value = 'IN';
+            } else {
+                setConfig('US');
+                document.getElementById('countrySelect').value = 'US';
+            }
+        }
+
+        function manualCountryChange(countryCode) {
+            setConfig(countryCode);
+        }
+
+        function setConfig(countryCode) {
+            if (countryCode === 'IN') {
+                config = { country: 'IN', currency: '₹', locale: 'en-IN', dateFormat: 'DD/MM/YYYY', unit: 'metric' };
+                document.getElementById('bmi-height-label').innerText = 'Height (cm):';
+                document.getElementById('bmi-weight-label').innerText = 'Weight (kg):';
+            } else {
+                config = { country: 'US', currency: '$', locale: 'en-US', dateFormat: 'MM/DD/YYYY', unit: 'imperial' };
+                document.getElementById('bmi-height-label').innerText = 'Height (Inches):';
+                document.getElementById('bmi-weight-label').innerText = 'Weight (lbs):';
+            }
+
+            // Update Currency Symbols
+            document.querySelectorAll('.curr-symbol').forEach(el => el.innerText = config.currency);
+            
+            // Update Date Format Indicators
+            document.querySelectorAll('.date-fmt-text').forEach(el => el.innerText = config.dateFormat);
+            
+            // Set Target Input Date
+            const targetInput = document.getElementById('age-target');
+            if (targetInput) targetInput.value = formatDateByLocale(new Date());
+
+            // Placeholders for Dates
+            ['preg-lmp', 'conc-lmp', 'dd-lmp', 'age-dob'].forEach(id => {
+                const input = document.getElementById(id);
+                if (input) input.placeholder = config.dateFormat;
+            });
+        }
+
+        // Formatting Helpers
+        function fmt(num) {
+            return config.currency + Math.round(num).toLocaleString(config.locale);
+        }
+
+        function formatDateByLocale(dateObj) {
+            let day = String(dateObj.getDate()).padStart(2, '0');
+            let month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            let year = dateObj.getFullYear();
+            return config.dateFormat === 'MM/DD/YYYY' ? `${month}/${day}/${year}` : `${day}/${month}/${year}`;
+        }
+
+        function parseDateByLocale(str) {
+            if (!str) return null;
+            let parts = str.split('/');
+            if (parts.length !== 3) return null;
+            
+            let day, month, year;
+            if (config.dateFormat === 'MM/DD/YYYY') {
+                month = parseInt(parts[0], 10) - 1;
+                day = parseInt(parts[1], 10);
+                year = parseInt(parts[2], 10);
+            } else {
+                day = parseInt(parts[0], 10);
+                month = parseInt(parts[1], 10) - 1;
+                year = parseInt(parts[2], 10);
+            }
+
+            if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
+            let date = new Date(year, month, day);
+            if (date.getFullYear() === year && date.getMonth() === month && date.getDate() === day) {
+                return date;
+            }
+            return null;
+        }
+
+        function showCalc(calcId, element) {
+            document.querySelectorAll('.calc-card').forEach(card => card.classList.remove('active'));
+            document.querySelectorAll('.calc-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(calcId).classList.add('active');
+            element.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // SECRET ADMIN PANEL FUNCTIONS
+        function openAdmin() {
+            let pass = prompt("Enter Admin Password:");
+            if (pass === ADMIN_PASSWORD) {
+                document.getElementById('adminModal').style.display = 'flex';
+            } else if (pass !== null) {
+                alert("Incorrect Password!");
+            }
+        }
+
+        function closeAdmin() {
+            document.getElementById('adminModal').style.display = 'none';
+        }
+
+        function publishAdminBlog() {
+            let location = document.getElementById('adminBlogLocation').value;
+            let title = document.getElementById('adminBlogTitle').value.trim();
+            let content = document.getElementById('adminBlogContent').value.trim();
+
+            if (title === "" || content === "") {
+                alert("Please fill in both title and content!");
+                return;
+            }
+
+            let today = formatDateByLocale(new Date());
+            let blogObj = { title, content, date: today, location };
+
+            let savedBlogs = JSON.parse(localStorage.getItem('my_site_blogs') || '[]');
+            savedBlogs.unshift(blogObj);
+            localStorage.setItem('my_site_blogs', JSON.stringify(savedBlogs));
+
+            renderBlogHTML(blogObj, true);
+
+            document.getElementById('adminBlogTitle').value = "";
+            document.getElementById('adminBlogContent').value = "";
+            closeAdmin();
+
+            alert(`Article published successfully to ${location === 'main' ? 'Latest Articles & Updates' : 'Sidebar Updates'}!`);
+        }
+
+        function renderBlogHTML(blog, isTop) {
+            let targetContainer = blog.location === 'sidebar' 
+                ? document.getElementById('sidebarBlogContainer') 
+                : document.getElementById('blogContainer');
+
+            if(!targetContainer) return;
+
+            let postDiv = document.createElement('div');
+            postDiv.className = 'blog-post';
+            postDiv.style.marginBottom = "15px";
+            postDiv.style.borderBottom = "1px solid var(--border-color)";
+            postDiv.style.paddingBottom = "10px";
+            postDiv.innerHTML = `
+                <h4 style="color: var(--primary); font-size:${blog.location === 'sidebar' ? '0.95rem' : '1.1rem'}; margin-bottom:4px;">${blog.title}</h4>
+                <div class="date" style="font-size:0.75rem; color:var(--text-muted); margin-bottom:6px;">Published: ${blog.date}</div>
+                <p style="font-size:${blog.location === 'sidebar' ? '0.85rem' : '0.9rem'}; color:#475569; line-height:1.5;">${blog.content}</p>
+            `;
+
+            if (isTop && targetContainer.children.length > 1) {
+                targetContainer.insertBefore(postDiv, targetContainer.children[1]);
+            } else {
+                targetContainer.appendChild(postDiv);
+            }
+        }
+
+        function loadSavedBlogs() {
+            let savedBlogs = JSON.parse(localStorage.getItem('my_site_blogs') || '[]');
+            savedBlogs.reverse().forEach(blog => renderBlogHTML(blog, true));
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && e.key === 'A') openAdmin();
+        });
+
+        // Custom Password Generator
+        function generateCustomPassword() {
+            let word = document.getElementById('cust-word').value.trim();
+            let num = document.getElementById('cust-num').value.trim();
+            let sym = document.getElementById('cust-sym').value.trim();
+            let doShuffle = document.getElementById('shuffle-check').checked;
+
+            if (!word && !num) {
+                alert("Please enter a word or number!");
+                return;
+            }
+
+            if (word.length > 0) word = word.charAt(0).toUpperCase() + word.slice(1);
+            if (!sym) sym = "@";
+
+            let combined = word + num + sym;
+
+            if (doShuffle) {
+                let arr = combined.split('');
+                for (let i = arr.length - 1; i > 0; i--) {
+                    let j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                combined = arr.join('');
+            }
+
+            document.getElementById('cust-pass-val').innerText = combined;
+            document.getElementById('cust-pass-result').classList.add('show');
+        }
+
+        // Financial Calculations
+        function calcMortgage() {
+            let p = parseFloat(document.getElementById('mg-price').value) - parseFloat(document.getElementById('mg-down').value);
+            let r = parseFloat(document.getElementById('mg-rate').value) / 12 / 100;
+            let n = parseFloat(document.getElementById('mg-years').value) * 12;
+            let tax = parseFloat(document.getElementById('mg-tax').value) / 12;
+            if(!p || !r || !n) return;
+            let emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+            let totalMonthly = emi + tax;
+            document.getElementById('mg-val').innerText = fmt(totalMonthly);
+            document.getElementById('mg-details').innerHTML = `Base EMI: <b>${fmt(emi)}</b> | Property Tax: <b>${fmt(tax)}/mo</b>`;
+            document.getElementById('mg-result').classList.add('show');
+        }
+
+        function calcLoan() {
+            let p = parseFloat(document.getElementById('ln-amount').value);
+            let r = parseFloat(document.getElementById('ln-rate').value) / 12 / 100;
+            let n = parseFloat(document.getElementById('ln-years').value) * 12;
+            if(!p || !r || !n) return;
+            let emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+            document.getElementById('ln-val').innerText = fmt(emi);
+            document.getElementById('ln-details').innerHTML = `Total Payable: <b>${fmt(emi * n)}</b>`;
+            document.getElementById('ln-result').classList.add('show');
+        }
+
+        function calcAutoLoan() {
+            let p = parseFloat(document.getElementById('al-price').value) - parseFloat(document.getElementById('al-down').value);
+            let r = parseFloat(document.getElementById('al-rate').value) / 12 / 100;
+            let n = parseFloat(document.getElementById('al-years').value) * 12;
+            if(!p || !r || !n) return;
+            let emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+            document.getElementById('al-val').innerText = fmt(emi);
+            document.getElementById('al-details').innerHTML = `Loan Financed: <b>${fmt(p)}</b>`;
+            document.getElementById('al-result').classList.add('show');
+        }
+
+        function calcSimpleInterest() {
+            let p = parseFloat(document.getElementById('it-p').value);
+            let r = parseFloat(document.getElementById('it-r').value);
+            let t = parseFloat(document.getElementById('it-t').value);
+            let interest = (p * r * t) / 100;
+            document.getElementById('it-val').innerText = fmt(interest);
+            document.getElementById('it-details').innerHTML = `Maturity Amount: <b>${fmt(p + interest)}</b>`;
+            document.getElementById('it-result').classList.add('show');
+        }
+
+        function calcPayment() {
+            let p = parseFloat(document.getElementById('pm-amount').value);
+            let r = parseFloat(document.getElementById('pm-rate').value) / 12 / 100;
+            let n = parseFloat(document.getElementById('pm-months').value);
+            let emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+            document.getElementById('pm-val').innerText = fmt(emi);
+            document.getElementById('pm-result').classList.add('show');
+        }
+
+        function calcRetirement() {
+            let p = parseFloat(document.getElementById('rt-savings').value);
+            let r = (parseFloat(document.getElementById('rt-rate').value) / 100) / 12;
+            let n = (parseFloat(document.getElementById('rt-retire').value) - parseFloat(document.getElementById('rt-age').value)) * 12;
+            let corpus = p * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
+            document.getElementById('rt-val').innerText = fmt(corpus);
+            document.getElementById('rt-details').innerHTML = `Total Investment: <b>${fmt(p * n)}</b>`;
+            document.getElementById('rt-result').classList.add('show');
+        }
+
+        function calcAmortization() {
+            let p = parseFloat(document.getElementById('am-amount').value);
+            let r = parseFloat(document.getElementById('am-rate').value) / 12 / 100;
+            let n = parseFloat(document.getElementById('am-years').value) * 12;
+            let emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+            let firstMonthInterest = p * r;
+            let firstMonthPrincipal = emi - firstMonthInterest;
+            document.getElementById('am-val').innerText = fmt(emi) + " / mo";
+            document.getElementById('am-details').innerHTML = `Month 1 Interest: <b>${fmt(firstMonthInterest)}</b> | Month 1 Principal: <b>${fmt(firstMonthPrincipal)}</b>`;
+            document.getElementById('am-result').classList.add('show');
+        }
+
+        function calcInvestment() {
+            let p = parseFloat(document.getElementById('iv-principal').value);
+            let r = parseFloat(document.getElementById('iv-rate').value) / 100;
+            let t = parseFloat(document.getElementById('iv-years').value);
+            let val = p * Math.pow(1 + r, t);
+            document.getElementById('iv-val').innerText = fmt(val);
+            document.getElementById('iv-details').innerHTML = `Profit Gain: <b>${fmt(val - p)}</b>`;
+            document.getElementById('iv-result').classList.add('show');
+        }
+
+        function calcInflation() {
+            let p = parseFloat(document.getElementById('inf-amount').value);
+            let r = parseFloat(document.getElementById('inf-rate').value) / 100;
+            let t = parseFloat(document.getElementById('inf-years').value);
+            let futureVal = p * Math.pow(1 + r, t);
+            document.getElementById('inf-val').innerText = fmt(futureVal);
+            document.getElementById('inf-details').innerHTML = `Loss in Value Impact: <b>+${fmt(futureVal - p)}</b> needed`;
+            document.getElementById('inf-result').classList.add('show');
+        }
+
+        function calcFinance() {
+            let p = parseFloat(document.getElementById('fn-deposit').value);
+            let r = parseFloat(document.getElementById('fn-rate').value) / 100;
+            let t = parseFloat(document.getElementById('fn-years').value);
+            let fv = p * ((Math.pow(1 + r, t) - 1) / r);
+            document.getElementById('fn-val').innerText = fmt(fv);
+            document.getElementById('fn-result').classList.add('show');
+        }
+
+        // DYNAMIC TAX LOGIC (US vs INDIA)
+        function calcIncomeTax() {
+            let inc = parseFloat(document.getElementById('tax-income').value) || 0;
+            let tax = 0;
+
+            if (config.country === 'IN') {
+                if (inc > 1500000) tax = (inc - 1500000) * 0.30 + 150000;
+                else if (inc > 1200000) tax = (inc - 1200000) * 0.20 + 90000;
+                else if (inc > 900000) tax = (inc - 900000) * 0.15 + 45000;
+                else if (inc > 600000) tax = (inc - 600000) * 0.10 + 15000;
+                else if (inc > 300000) tax = (inc - 300000) * 0.05;
+            } else {
+                if (inc > 100000) tax = inc * 0.22;
+                else if (inc > 45000) tax = inc * 0.12;
+                else if (inc > 11000) tax = inc * 0.10;
+                else tax = 0;
+            }
+
+            document.getElementById('tax-val').innerText = fmt(tax);
+            document.getElementById('tax-details').innerHTML = `Effective Tax Rate: <b>${inc > 0 ? ((tax/inc)*100).toFixed(1) : 0}%</b> (${config.country} Mode)`;
+            document.getElementById('tax-result').classList.add('show');
+        }
+
+        function calcCompound() {
+            let p = parseFloat(document.getElementById('ci-p').value);
+            let r = parseFloat(document.getElementById('ci-r').value) / 100;
+            let t = parseFloat(document.getElementById('ci-t').value);
+            let val = p * Math.pow(1 + r, t);
+            document.getElementById('ci-val').innerText = fmt(val);
+            document.getElementById('ci-details').innerHTML = `Interest Earned: <b>${fmt(val - p)}</b>`;
+            document.getElementById('ci-result').classList.add('show');
+        }
+
+        function calcSalary() {
+            let amt = parseFloat(document.getElementById('sal-amount').value);
+            let type = document.getElementById('sal-type').value;
+            let annual = type === 'monthly' ? amt * 12 : amt * 40 * 52;
+            document.getElementById('sal-val').innerText = fmt(annual);
+            document.getElementById('sal-result').classList.add('show');
+        }
+
+        function calcRate() {
+            let p = parseFloat(document.getElementById('ir-p').value);
+            let i = parseFloat(document.getElementById('ir-i').value);
+            let t = parseFloat(document.getElementById('ir-t').value);
+            let r = (i / (p * t)) * 100;
+            document.getElementById('ir-val').innerText = r.toFixed(2) + '%';
+            document.getElementById('ir-result').classList.add('show');
+        }
+
+        function calcSalesTax() {
+            let amt = parseFloat(document.getElementById('st-amount').value);
+            let rate = parseFloat(document.getElementById('st-rate').value);
+            let tax = (amt * rate) / 100;
+            document.getElementById('st-val').innerText = fmt(amt + tax);
+            document.getElementById('st-details').innerHTML = `Tax Amount: <b>${fmt(tax)}</b>`;
+            document.getElementById('st-result').classList.add('show');
+        }
+
+        // Fitness & Health Functions
+        function calcBMI() {
+            let w = parseFloat(document.getElementById('bmi-weight').value);
+            let h = parseFloat(document.getElementById('bmi-height').value);
+            if(!w || !h) return;
+
+            let bmi = 0;
+            if (config.unit === 'imperial') {
+                bmi = (w / (h * h)) * 703; // lbs & inches
+            } else {
+                let hMeter = h / 100;
+                bmi = w / (hMeter * hMeter); // kg & cm
+            }
+
+            let status = "Normal weight";
+            if(bmi < 18.5) status = "Underweight";
+            else if(bmi >= 25 && bmi < 29.9) status = "Overweight";
+            else if(bmi >= 30) status = "Obesity";
+
+            document.getElementById('bmi-val').innerText = bmi.toFixed(1);
+            document.getElementById('bmi-details').innerText = `Status: ${status}`;
+            document.getElementById('bmi-result').classList.add('show');
+        }
+
+        function calcPregnancy() {
+            let lmpInput = document.getElementById('preg-lmp').value;
+            let lmp = parseDateByLocale(lmpInput);
+            if(!lmp) {
+                alert(`Please enter date in ${config.dateFormat} format.`);
+                return;
+            }
+            let today = new Date();
+            let diffDays = Math.floor((today - lmp) / (1000 * 60 * 60 * 24));
+            if(diffDays < 0) return;
+            let weeks = Math.floor(diffDays / 7);
+            let days = diffDays % 7;
+            
+            let due = new Date(lmp);
+            due.setDate(due.getDate() + 280);
+
+            document.getElementById('preg-val').innerText = `${weeks} Weeks, ${days} Days`;
+            document.getElementById('preg-details').innerHTML = `Estimated Due Date: <b>${formatDateByLocale(due)}</b>`;
+            document.getElementById('preg-result').classList.add('show');
+        }
+
+        function calcConception() {
+            let lmpInput = document.getElementById('conc-lmp').value;
+            let lmp = parseDateByLocale(lmpInput);
+            if(!lmp) {
+                alert(`Please enter date in ${config.dateFormat} format.`);
+                return;
+            }
+            let concDate = new Date(lmp);
+            concDate.setDate(concDate.getDate() + 14);
+
+            let concWinStart = new Date(concDate);
+            concWinStart.setDate(concWinStart.getDate() - 2);
+            let concWinEnd = new Date(concDate);
+            concWinEnd.setDate(concWinEnd.getDate() + 2);
+
+            document.getElementById('conc-val').innerText = formatDateByLocale(concDate);
+            document.getElementById('conc-details').innerHTML = `Probable Conception Window: <b>${formatDateByLocale(concWinStart)} - ${formatDateByLocale(concWinEnd)}</b>`;
+            document.getElementById('conc-result').classList.add('show');
+        }
+
+        function calcDueDate() {
+            let lmpInput = document.getElementById('dd-lmp').value;
+            let lmp = parseDateByLocale(lmpInput);
+            if(!lmp) {
+                alert(`Please enter date in ${config.dateFormat} format.`);
+                return;
+            }
+            let due = new Date(lmp);
+            due.setDate(due.getDate() + 280);
+
+            document.getElementById('dd-val').innerText = formatDateByLocale(due);
+            document.getElementById('dd-details').innerHTML = `Standard 40-week gestation cycle calculated.`;
+            document.getElementById('dd-result').classList.add('show');
+        }
+
+        function calcWeight() {
+            let h = parseFloat(document.getElementById('wt-height').value);
+            let gender = document.getElementById('wt-gender').value;
+            if(!h) return;
+
+            let cm = config.unit === 'imperial' ? h * 2.54 : h;
+            let inchesOver5ft = (cm / 2.54) - 60;
+            if(inchesOver5ft < 0) inchesOver5ft = 0;
+            
+            let ibwKg = gender === 'male' ? 50 + (2.3 * inchesOver5ft) : 45.5 + (2.3 * inchesOver5ft);
+            let minHealthyKg = (18.5 * Math.pow(cm/100, 2));
+            let maxHealthyKg = (24.9 * Math.pow(cm/100, 2));
+
+            if (config.unit === 'imperial') {
+                let ibwLbs = ibwKg * 2.20462;
+                document.getElementById('wt-val').innerText = ibwLbs.toFixed(1) + ' lbs';
+                document.getElementById('wt-details').innerHTML = `Healthy Weight Range: <b>${(minHealthyKg * 2.20462).toFixed(1)} lbs - ${(maxHealthyKg * 2.20462).toFixed(1)} lbs</b>`;
+            } else {
+                document.getElementById('wt-val').innerText = ibwKg.toFixed(1) + ' kg';
+                document.getElementById('wt-details').innerHTML = `Healthy Weight Range: <b>${minHealthyKg.toFixed(1)} kg - ${maxHealthyKg.toFixed(1)} kg</b>`;
+            }
+            document.getElementById('wt-result').classList.add('show');
+        }
+
+        function calcAge() {
+            const dobVal = document.getElementById('age-dob').value;
+            const targetVal = document.getElementById('age-target').value;
+
+            let dob = parseDateByLocale(dobVal);
+            let target = parseDateByLocale(targetVal) || new Date();
+
+            if (!dob) {
+                alert(`Please enter a valid Date of Birth in ${config.dateFormat} format.`);
+                return;
+            }
+
+            if (dob > target) {
+                alert("Date of Birth cannot be in the future of the target date.");
+                return;
+            }
+
+            let y1 = dob.getFullYear(), m1 = dob.getMonth(), d1 = dob.getDate();
+            let y2 = target.getFullYear(), m2 = target.getMonth(), d2 = target.getDate();
+
+            let years = y2 - y1;
+            let months = m2 - m1;
+            let days = d2 - d1;
+
+            if (days < 0) {
+                months--;
+                let prevMonthLastDay = new Date(y2, m2, 0).getDate();
+                days += prevMonthLastDay;
+            }
+
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            let totalDiffMs = Math.abs(target - dob);
+            let totalDays = Math.floor(totalDiffMs / (1000 * 60 * 60 * 24));
+            let totalWeeks = Math.floor(totalDays / 7);
+            let totalMonths = (years * 12) + months;
+            let totalHours = totalDays * 24;
+
+            let nextBday = new Date(y2, m1, d1);
+            if (nextBday < target) nextBday.setFullYear(y2 + 1);
+            
+            let nextBdayDiffDays = Math.ceil((nextBday - target) / (1000 * 60 * 60 * 24));
+            let nextBdayMonths = Math.floor(nextBdayDiffDays / 30.4375);
+            let nextBdayDays = Math.floor(nextBdayDiffDays % 30.4375);
+
+            document.getElementById('age-val').innerText = `${years} Years, ${months} Months, ${days} Days`;
+            document.getElementById('age-details').innerHTML = `
+                <p style="margin-top: 6px;">🎉 <strong>Next Birthday (${formatDateByLocale(nextBday)}):</strong> In ${nextBdayMonths} months and ${nextBdayDays} days (${nextBdayDiffDays} total days)</p>
+                <p style="margin-top: 6px; border-top: 1px dashed var(--border-color); padding-top: 6px;">📊 <strong>Total Lifespan Summary:</strong></p>
+                <ul style="padding-left: 20px; list-style-type: square; margin-top: 4px;">
+                    <li>Total Months: <b>${totalMonths.toLocaleString()}</b></li>
+                    <li>Total Weeks: <b>${totalWeeks.toLocaleString()}</b></li>
+                    <li>Total Days: <b>${totalDays.toLocaleString()}</b></li>
+                    <li>Total Hours: <b>${totalHours.toLocaleString()}</b></li>
+                </ul>
+            `;
+            document.getElementById('age-result').classList.add('show');
+        }
+
+        // CGPA Calculator Logic
+        function addCgpaRow() {
+            const container = document.getElementById('cgpa-rows');
+            const newRow = document.createElement('div');
+            newRow.className = 'cgpa-row';
+            newRow.innerHTML = `
+                <div class="form-group">
+                    <label>Semester / Subject Grade (GPA/Marks)</label>
+                    <input type="number" step="0.01" class="cgpa-grade" placeholder="e.g. 8.0 or 80">
+                </div>
+                <div class="form-group">
+                    <label>Credit Hours (Optional)</label>
+                    <input type="number" step="0.5" class="cgpa-credit" placeholder="e.g. 3 or 4" value="1">
+                </div>
+            `;
+            container.appendChild(newRow);
+        }
+
+        function calcCGPA() {
+            const grades = document.querySelectorAll('.cgpa-grade');
+            const credits = document.querySelectorAll('.cgpa-credit');
+
+            let totalPoints = 0;
+            let totalCredits = 0;
+
+            for (let i = 0; i < grades.length; i++) {
+                let g = parseFloat(grades[i].value);
+                let c = parseFloat(credits[i].value) || 1;
+
+                if (!isNaN(g)) {
+                    totalPoints += g * c;
+                    totalCredits += c;
+                }
+            }
+
+            if (totalCredits === 0) {
+                alert("Please enter valid grades.");
+                return;
+            }
+
+            let cgpa = totalPoints / totalCredits;
+            let percentage = cgpa <= 10 ? (cgpa * 9.5).toFixed(2) + "%" : "N/A";
+
+            document.getElementById('cgpa-val').innerText = cgpa.toFixed(2);
+            document.getElementById('cgpa-details').innerHTML = `
+                Equivalent Percentage (Standard 9.5 Multiple): <b>${percentage}</b><br>
+                Total Credits Counted: <b>${totalCredits}</b>
+            `;
+            document.getElementById('cgpa-result').classList.add('show');
+        }
+
+        // Math Functions
+        function gcd(a, b) { return b === 0 ? Math.abs(a) : gcd(b, a % b); }
+
+        function calcFraction() {
+            let n1 = parseInt(document.getElementById('frac-num1').value) || 0;
+            let d1 = parseInt(document.getElementById('frac-den1').value) || 1;
+            let n2 = parseInt(document.getElementById('frac-num2').value) || 0;
+            let d2 = parseInt(document.getElementById('frac-den2').value) || 1;
+            let op = document.getElementById('frac-op').value;
+
+            if (d1 === 0 || d2 === 0) { alert("Denominator cannot be zero."); return; }
+
+            let resNum, resDen;
+            if (op === '+') { resNum = n1 * d2 + n2 * d1; resDen = d1 * d2; }
+            else if (op === '-') { resNum = n1 * d2 - n2 * d1; resDen = d1 * d2; }
+            else if (op === '*') { resNum = n1 * n2; resDen = d1 * d2; }
+            else if (op === '/') { resNum = n1 * d2; resDen = d1 * n2; }
+
+            if (resDen === 0) { alert("Division by zero error."); return; }
+
+            let common = gcd(resNum, resDen);
+            let simpNum = resNum / common;
+            let simpDen = resDen / common;
+
+            if (simpDen < 0) { simpNum = -simpNum; simpDen = -simpDen; }
+
+            document.getElementById('frac-val').innerText = `${simpNum}/${simpDen}`;
+            document.getElementById('frac-details').innerHTML = `Decimal Value: <b>${(simpNum / simpDen).toFixed(4)}</b>`;
+            document.getElementById('frac-result').classList.add('show');
+        }
+
+        function calcPercentage() {
+            let rate = parseFloat(document.getElementById('pct-rate').value);
+            let total = parseFloat(document.getElementById('pct-total').value);
+            if (isNaN(rate) || isNaN(total)) return;
+            let result = (rate / 100) * total;
+            document.getElementById('pct-val').innerText = result;
+            document.getElementById('pct-result').classList.add('show');
+        }
+
+        function calcRNG() {
+            let min = parseInt(document.getElementById('rng-min').value);
+            let max = parseInt(document.getElementById('rng-max').value);
+            if (isNaN(min) || isNaN(max) || min > max) { alert("Please enter a valid range."); return; }
+            let randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
+            document.getElementById('rng-val').innerText = randomNum;
+            document.getElementById('rng-result').classList.add('show');
+        }
+
+        function calcTriangle() {
+            let a = parseFloat(document.getElementById('tri-a').value);
+            let b = parseFloat(document.getElementById('tri-b').value);
+            let c = parseFloat(document.getElementById('tri-c').value);
+
+            if (a + b <= c || a + c <= b || b + c <= a) {
+                alert("Invalid triangle sides: sum of any two sides must be greater than the third side.");
+                return;
+            }
+
+            let perimeter = a + b + c;
+            let s = perimeter / 2;
+            let area = Math.sqrt(s * (s - a) * (s - b) * (s - c));
+
+            document.getElementById('tri-val').innerText = area.toFixed(2) + " sq units";
+            document.getElementById('tri-details').innerHTML = `Perimeter: <b>${perimeter} units</b> | Semi-perimeter (s): <b>${s}</b>`;
+            document.getElementById('tri-result').classList.add('show');
+        }
+    </script>
+</body>
+</html>
